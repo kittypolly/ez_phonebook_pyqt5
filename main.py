@@ -184,7 +184,7 @@ class Store_add(QWidget):
 
     def uploadImage(self):
         global defaultImg
-        size =(64,64)
+        size =(128,128)
         self.fileName, ok = QFileDialog.getOpenFileName(self, '이미지 불러오기', '', 'Image Files (*.jpg *.png)')
 
         if ok:
@@ -247,6 +247,8 @@ class Store_update(QWidget):
         self.imgEntry.clicked.connect(self.uploadImage)
         self.confirm=QPushButton("변경하기")
         self.confirm.clicked.connect(self.updateStore)
+
+        self.title.font(self)
 
     def layouts(self):
 
@@ -319,9 +321,9 @@ class Store_Detail(QWidget):
     def UI(self):
         self.mainDesign()
         self.layouts()
+        self.font()
         self.displayRecord()
         self.getMenu()
-
 
     def closeEvent(self, QCloseEvent):
 
@@ -344,6 +346,11 @@ class Store_Detail(QWidget):
         self.deleteButton = QPushButton("삭제")
         self.deleteButton.clicked.connect(self.deleteMenu)
 
+    def font(self):
+        font = QFont()
+        font.setPointSize(15)
+        self.title.setFont(font)
+
     def layouts(self):
         self.mainLayout = QHBoxLayout()
         self.leftMainLayout = QVBoxLayout()
@@ -352,14 +359,19 @@ class Store_Detail(QWidget):
         self.rightMainLayout = QVBoxLayout()
         self.rightBottomLayout = QHBoxLayout()
 
+        self.mainLayout.addSpacing(20)
         self.mainLayout.addLayout(self.leftMainLayout)
+        self.mainLayout.addSpacing(20)
         self.mainLayout.addLayout(self.rightMainLayout)
 
         self.leftMainLayout.addLayout(self.leftTopLayout)
         self.leftMainLayout.addLayout(self.leftBottomLayout)
 
+        self.rightMainLayout.addSpacing(10)
         self.rightMainLayout.addWidget(self.title)
+        self.rightMainLayout.addSpacing(10)
         self.rightMainLayout.addWidget(self.menu_list)
+        self.rightMainLayout.addSpacing(5)
         self.rightMainLayout.addLayout(self.rightBottomLayout)
 
         self.rightBottomLayout.addWidget(self.addButton)
@@ -383,9 +395,12 @@ class Store_Detail(QWidget):
         self.name = QLabel(display_store)
         self.number = QLabel(display_number)
 
+        self.leftTopLayout.addSpacing(30)
         self.leftTopLayout.addWidget(self.img)
+        self.leftTopLayout.addSpacing(20)
 
         self.leftBottomLayout.addRow("매장명: ",self.name)
+        self.leftBottomLayout.setSpacing(10)
         self.leftBottomLayout.addRow("전화번호: ",self.number)
 
     def addMenu(self):
