@@ -88,7 +88,7 @@ class Window(QWidget):
 
         if self.store_list.selectedItems():
             store = self.store_list.currentItem().text()
-            store_phone = store.split(" ")[1]
+            store_phone = store.split(" ")[-1]
             self.gotoupdate = Store_update()
             self.close()
         else:
@@ -97,7 +97,7 @@ class Window(QWidget):
     def store_delete(self):
 
         if self.store_list.selectedItems():
-            store = str(self.store_list.currentItem().text().split(" ")[1])
+            store = str(self.store_list.currentItem().text().split(" ")[-1])
             mbox = QMessageBox()
             mbox.setIcon(QMessageBox.Question)
             mbox.setWindowTitle("경고")
