@@ -91,7 +91,6 @@ class Window(QWidget):
             store_phone = store.split(" ")[1]
             self.gotoupdate = Store_update()
             self.close()
-
         else:
             QMessageBox.information(self, "경고!!!", "변경을 위한 매장을 선택해주세요.")
 
@@ -247,8 +246,6 @@ class Store_update(QWidget):
         self.imgEntry.clicked.connect(self.uploadImage)
         self.confirm=QPushButton("변경하기")
         self.confirm.clicked.connect(self.updateStore)
-
-        self.title.font(self)
 
     def layouts(self):
 
@@ -433,12 +430,14 @@ class Store_Detail(QWidget):
         global gid
         global gmenu
         global gprice
+        global store_phone
 
-        gmenu = self.menu_list.currentItem().text().split(" ")[0]
-        gprice = self.menu_list.currentItem().text().split(" ")[1]
+        gmenu = self.menu_list.currentItem().text().split(" ")[0:-1]
+        gmenu = " ".join(gmenu)
+        gprice = self.menu_list.currentItem().text().split(" ")[-1]
 
-        query = "SELECT id FROM menus WHERE menu = ? and price = ?"
-        gid = cur.execute(query,(gmenu,gprice)).fetchone()[0]
+        query = "SELECT id FROM menus WHERE menu = ? and price = ? and phone = ?"
+        gid = cur.execute(query,(gmenu,gprice, store_phone)).fetchone()[0]
 
         if self.menu_list.selectedItems():
             mbox = QMessageBox()
@@ -467,15 +466,17 @@ class Store_Detail(QWidget):
 
     def getMenu(self):
         global store_phone
+
         try:
             query = "SELECT menu, price, phone FROM menus"
             menus = cur.execute(query).fetchall()
-            for menu in menus:
-                print(menu[0])
 
-            if (menus[0][2]) == store_phone:
-                for menu in menus:
-                    self.menu_list.addItem(menu[0] + " " + menu[1])
+            query = "SELECT COUNT(*) FROM menus"
+            database_range = cur.execute(query).fetchall()[0][0]
+
+            for i in range (database_range):
+                if (menus[i][2]) == store_phone:
+                    self.menu_list.addItem(menus[i][0] + " " + menus[i][1])
         except:
             pass
 
@@ -620,7 +621,6 @@ class EditMenu(QWidget):
                 QMessageBox.information(self, "경고", "메뉴가 변경되지 않았습니다.")
         else:
             QMessageBox.information(self, "경고", "빈칸을 채워주세요.")
-
 
 
 def main():
